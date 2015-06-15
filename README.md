@@ -1,11 +1,11 @@
 # GMS-Macros
 Tool for find unused macros in **GameMaker: Studio** projects
 
-Usage:
+**Usage:**
 
 `gms_macros.exe {options} <project directory>`
 
-options:
+Options:
 
     --wait     Wait user input before exit
     --verbose  Display all checks
