@@ -1,5 +1,5 @@
 # GMS-Macros
-Tool for find unused macros in *GameMaker: Studio* projects
+Tool for find unused macros in **GameMaker: Studio** projects
 
 Usage:
 
