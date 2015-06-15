@@ -1,0 +1,9 @@
+{
+	"name": "gms-macros",
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2015, Dmitry",
+	"authors": ["Dmitry"],
+	"dependencies": {
+        "kxml": "~>1.0.0"
+	}
+}

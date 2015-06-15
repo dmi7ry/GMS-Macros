@@ -1,0 +1,12 @@
+﻿<Properties StartupItem="dub.json">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Default" PreferredExecutionTarget="release" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="source\app.d">
+    <Files>
+      <File FileName="source\app.d" Line="27" Column="43" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
