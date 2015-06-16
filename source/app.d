@@ -3,7 +3,7 @@ import kxml.xml;
 
 string projectDirectory, projectFile;
 bool waitUser, verbose;
-static int[string] macrosList, spritesList, objectsList, scriptsList, fontsList;
+static int[string] listSounds, listSprites, listBackgrounds, listPaths, listScripts, listFonts, listObjects, listMacros;
 
 static const int RESULT_OK = 0;
 static const int RESULT_FILE_NOT_FOUND = 1;
@@ -17,10 +17,10 @@ int main(string[] args)
     
     if (res == RESULT_OK)
     {
-        createMacrosList(projectFile);
-        searchMacrosInProject(projectDirectory, macrosList);
+        createLists(projectFile);
+        searchMacrosInProject(projectDirectory, listMacros);
         
-        displayUnusedMacros(macrosList);
+        displayUnusedMacros(listMacros);
     }
     
     if (waitUser)
@@ -58,7 +58,7 @@ int parseArguments(ref string[] args)
         writeln("Error. Project directory not found: ", project_dir);
         return RESULT_FILE_NOT_FOUND;
     }
-
+    
     projectDirectory = project_dir;
     
     /* Search project file */
@@ -74,7 +74,7 @@ int parseArguments(ref string[] args)
         {
             writeln("Error. Found more than one *.project.gmx file in the root directory of the project");
             return RESULT_TOO_MANY_FILES_IN_ROOT;
-        } 
+        }
     }
     
     if (projectFile == "")
@@ -89,16 +89,25 @@ int parseArguments(ref string[] args)
 }
 
 /* Parse Project file */
-void createMacrosList(string file)
+void createLists(string file)
 {
     auto txt = readText(file);
     XmlNode project = readDocument(txt);
+    
     auto constants = project.parseXPath("assets/constants/constant");
     foreach (val; constants)
     {
         auto name = val.getAttribute("name");
-        macrosList[name] = 0;
+        listMacros[name] = 0;
     }
+    
+    searchElements(listSounds, project, "sound", "sound\\");
+    searchElements(listSprites, project, "sprite", "sprites\\");
+    searchElements(listBackgrounds, project, "background", "background\\");
+    searchElements(listPaths, project, "path", "paths\\");
+    searchElements(listScripts, project, "script", "scripts\\");
+    searchElements(listFonts, project, "font", "fonts\\");
+    searchElements(listObjects, project, "object", "objects\\"); 
 }
 
 /* Parse Project directory */
@@ -202,3 +211,31 @@ void displayUnusedMacros(ref int[string] macros)
         writeln("not found");
     }
 }
+
+/* Search elements in the xml */
+void searchElements(ref int[string] list, XmlNode xml, string key, string path_prefix)
+{
+    foreach(element; xml.getChildren)
+    {
+        if (element.isXmlComment || element.isCData) continue;
+        
+        searchElements(list, element, key, path_prefix);
+        
+        if (!element.isCData && element.getName == key)
+        {
+            auto val = element.getCData.chompPrefix(path_prefix);
+            
+            if ((val in list) !is null)
+            {
+                writeln("Name duplicate: ", val);
+            }
+            else
+            {
+                list[val] = 0;
+                if (verbose) writeln("[", key, "] ", val);
+            }
+        }
+    } 
+}
+
+
