@@ -3,11 +3,12 @@ import kxml.xml;
 
 string projectDirectory, projectFile;
 bool waitUser, verbose;
-static int[string] macrosList;
+static int[string] macrosList, spritesList, objectsList, scriptsList, fontsList;
 
 static const int RESULT_OK = 0;
 static const int RESULT_FILE_NOT_FOUND = 1;
 static const int RESULT_TOO_MANY_FILES_IN_ROOT = 2;
+static const int RESULT_PROJECT_NOT_FOUND = 3;
 static const int RESULT_HELP = -1;
 
 int main(string[] args)
@@ -52,31 +53,37 @@ int parseArguments(ref string[] args)
     /* Check command line arguments */
     auto project_dir = args[1];
     
-    if (!exists(project_dir) || !isDir(project_dir))
+    if (!project_dir.exists || !project_dir.isDir)
     {
         writeln("Error. Project directory not found: ", project_dir);
         return RESULT_FILE_NOT_FOUND;
     }
-    
+
     projectDirectory = project_dir;
     
     /* Search project file */
-    auto files = dirEntries(project_dir, "*.gmx", SpanMode.shallow);
+    auto files = dirEntries(project_dir, "*.project.gmx", SpanMode.shallow);
     
     foreach(string f; files)
     {
-        if (projectFile== "")
+        if (projectFile == "")
         {
             projectFile = f;
         }
         else
         {
-            writeln("Error. Found more than one .gmx file in the root directory of the project");
+            writeln("Error. Found more than one *.project.gmx file in the root directory of the project");
             return RESULT_TOO_MANY_FILES_IN_ROOT;
-        }
-        
-        writeln("Project file: ", projectFile);
+        } 
     }
+    
+    if (projectFile == "")
+    {
+        writeln("Error. Project file *.project.gmx not found");
+        return RESULT_PROJECT_NOT_FOUND;
+    }
+    
+    writeln("Project file: ", projectFile);
     
     return RESULT_OK;
 }
