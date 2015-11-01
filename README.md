@@ -10,3 +10,5 @@ Options:
     --wait     Wait user input before exit
     --verbose  Display all checks
 
+<br>
+Download [here](https://github.com/dmi7ry/GMS-Macros/releases).
